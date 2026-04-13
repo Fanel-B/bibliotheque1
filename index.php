@@ -11,6 +11,14 @@
 
 <?php include 'includes/header.php'; ?>
 
+
+<div class="container">
+  <div class="role-selection">
+    <a href="pages/login.php"><div class="role-container">Connexion</div></a>
+    <a href="pages/register.php"><div class="role-container">Inscription</div></a>
+  </div>
+</div>
+
 <section class="hero">
   <div class="hero-content">
     <h2 id="welcome-text"></h2>

@@ -1,29 +1,33 @@
+
 <?php
 session_start();
-include "../config/database.php";
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['utilisateur']) || !$_SESSION['employe']) {
+  header("Location: login.php");
+  exit;
 }
 
-// Récupérer les capteurs
-$stmt = $pdo->query("SELECT * FROM CAPTEUR");
-$capteurs = $stmt->fetchAll();
+include '../includes/header.php';
+include '../config.php';
+
+// Récupération des capteurs
+$capteurs = $pdo->query("SELECT * FROM CAPTEUR")->fetchAll();
 ?>
-<h1>Liste des Capteurs</h1>
-<table>
-    <tr>
-        <th>Type</th>
-        <th>Emplacement</th>
-        <th>Valeur</th>
-    </tr>
-    <?php foreach ($capteurs as $capteur) : ?>
-        <tr>
-            <td><?= $capteur["type_capteur"] ?></td>
-            <td><?= $capteur["emplacement"] ?></td>
-            <td><?= $capteur["valeur"] ?></td>
-        </tr>
-    <?php endforeach; ?>
-</table>
-<a href="dashboard.php">Retour</a>
+
+<div class="container">
+  <h2>📡 Liste des capteurs installés</h2>
+
+  <?php foreach ($capteurs as $capteur): ?>
+    <div class="capteur-box">
+      <h3><?= htmlspecialchars($capteur['type_capteur']) ?></h3>
+      <p><strong>Emplacement :</strong> <?= htmlspecialchars($capteur['emplacement']) ?></p>
+
+      <p><strong>Température :</strong> <?= $capteur['valeur_temperature'] ?? '--' ?> °C</p>
+      <p><strong>Humidité :</strong> <?= $capteur['valeur_humidite'] ?? '--' ?> %</p>
+      <p><strong>Luminosité :</strong> <?= $capteur['valeur_luminosite'] ?? '--' ?> lux</p>
+
+      <p><strong>Dernière mise à jour :</strong> <?= $capteur['date_maj'] ?? 'Inconnue' ?></p>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+<?php include '../includes/footer.php'; ?>
