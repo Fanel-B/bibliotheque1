@@ -1,13 +1,16 @@
 import { HttpError } from '../utils/HttpError.js';
 import * as iotRepository from '../repositories/iot.repository.js';
 import * as simulatorService from './simulator.service.js';
+import { evaluateAutomations } from './automations.service.js';
 import { handleDoorOpened } from './security.service.js';
 
 const VALID_HISTORY_RANGES = { '24h': 24, '7d': 24 * 7 };
 const VALID_DEVICE_STATES = ['on', 'off'];
 
-export function getZonesSnapshot() {
-  return simulatorService.getZonesSnapshot();
+export async function getZonesSnapshot() {
+  const snapshot = await simulatorService.getZonesSnapshot();
+  await evaluateAutomations(snapshot);
+  return snapshot;
 }
 
 export async function getSensorHistory(sensorId, range) {

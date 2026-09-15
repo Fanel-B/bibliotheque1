@@ -46,6 +46,13 @@ async function seed() {
     );
     await client.query(loansSql);
 
+    console.log("→ Insertion des règles d'automatisation de démonstration...");
+    const automationsSql = readFileSync(
+      path.join(__dirname, 'seeds', '003_automations.sql'),
+      'utf-8'
+    );
+    await client.query(automationsSql);
+
     console.log('\nTerminé. Comptes de démonstration (mot de passe pour tous : "demo1234") :');
     demoUsers.forEach((u) => console.log(`  - ${u.email}`));
   } finally {

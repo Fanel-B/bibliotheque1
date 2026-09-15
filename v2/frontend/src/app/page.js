@@ -64,6 +64,14 @@ export default function Home() {
             📊 Dashboard admin
           </Link>
         )}
+        {user && user.role === 'admin' && (
+          <Link
+            href="/automatisations"
+            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+          >
+            ⚙️ Automatisations
+          </Link>
+        )}
       </div>
 
       {loading ? (
