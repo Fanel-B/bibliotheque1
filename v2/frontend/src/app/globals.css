@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F9F6F0;
+  --foreground: #2C1810;
+
+  /* Palette Biblio-Tech confirmée dans le dossier d'architecture */
+  --color-bg: #F9F6F0;
+  --color-surface: #FFFFFF;
+  --color-accent: #1B5E20;
+  --color-blue: #1565C0;
+  --color-bordeaux: #7B1D1D;
+  --color-text: #2C1810;
+  --color-text-secondary: #5D4037;
+  --color-success: #E8F5E9;
+  --color-warning: #FFF3E0;
+  --color-error: #FFEBEE;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-accent: var(--color-accent);
+  --color-blue: var(--color-blue);
+  --color-bordeaux: var(--color-bordeaux);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
