@@ -1,10 +1,21 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import Image from 'next/image';
+import { myRecommendations } from '../services/recommendationsService';
 
 export default function Home() {
-  const { user, loading, logout } = useAuth();
+  const { user, accessToken, loading, logout } = useAuth();
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    myRecommendations(accessToken)
+      .then((data) => setRecommendations(data.books))
+      .catch(() => {});
+  }, [accessToken]);
 
   return (
     <main className="flex min-h-full flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
@@ -73,6 +84,30 @@ export default function Home() {
           </Link>
         )}
       </div>
+
+      {user && recommendations.length > 0 && (
+        <section className="mt-4 flex w-full max-w-3xl flex-col gap-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+            Recommandé pour vous
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {recommendations.map((book) => (
+              <Link
+                key={book.id}
+                href={`/catalogue/${book.id}`}
+                className="flex flex-col overflow-hidden rounded-lg border border-black/10 bg-surface text-left shadow-sm transition hover:shadow-md"
+              >
+                <div className="relative aspect-[2/3] w-full bg-black/5">
+                  {book.cover_url && (
+                    <Image src={book.cover_url} alt={book.title} fill className="object-cover" />
+                  )}
+                </div>
+                <p className="p-2 text-xs font-medium text-text">{book.title}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {loading ? (
         <p className="text-sm text-text-secondary">Vérification de la session...</p>
