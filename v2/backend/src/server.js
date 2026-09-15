@@ -9,6 +9,7 @@ import { loansRouter } from './routes/loans.routes.js';
 import { roomsRouter } from './routes/rooms.routes.js';
 import { reservationsRouter } from './routes/reservations.routes.js';
 import { adminRouter } from './routes/admin.routes.js';
+import { iotRouter } from './routes/iot.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/loans', loansRouter);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/reservations', reservationsRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/iot', iotRouter);
 
 app.use(errorHandler);
 

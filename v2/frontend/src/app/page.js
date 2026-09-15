@@ -48,6 +48,14 @@ export default function Home() {
             🗂️ Poste de prêt
           </Link>
         )}
+        {user && ['employee', 'admin'].includes(user.role) && (
+          <Link
+            href="/iot"
+            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+          >
+            🌐 Smart Library
+          </Link>
+        )}
         {user && user.role === 'admin' && (
           <Link
             href="/admin"
