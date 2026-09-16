@@ -99,6 +99,20 @@ export async function getActiveScenarios(zoneId, now) {
   return result.rows;
 }
 
+// Supprime les boosts encore actifs pour cette zone+capteur avant d'en poser
+// un nouveau, pour qu'un nouveau déclenchement remplace l'effet en cours
+// plutôt que de s'y additionner.
+export async function clearActiveScenarioBoosts(zoneId, sensorType, now) {
+  await pool.query(
+    `DELETE FROM events
+     WHERE zone_id = $1
+       AND type = 'scenario_boost'
+       AND payload->>'sensorType' = $2
+       AND (payload->>'expiresAt')::timestamptz > $3`,
+    [zoneId, sensorType, now]
+  );
+}
+
 export async function insertEvent({ type, zoneId, payload }) {
   const result = await pool.query(
     `INSERT INTO events (type, zone_id, payload) VALUES ($1, $2, $3)

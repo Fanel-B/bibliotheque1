@@ -20,7 +20,14 @@ async function findDeviceByName(name) {
 
 async function boostZone(zoneName, sensorType, boost) {
   const zone = await findZoneByName(zoneName);
-  const expiresAt = new Date(Date.now() + BOOST_DURATION_MINUTES * 60 * 1000);
+  const now = new Date();
+
+  // Un nouveau déclenchement remplace l'effet en cours plutôt que de s'y
+  // additionner (sinon cliquer 2x "augmenter température" en moins de
+  // 10 minutes doublerait l'effet).
+  await iotRepository.clearActiveScenarioBoosts(zone.id, sensorType, now);
+
+  const expiresAt = new Date(now.getTime() + BOOST_DURATION_MINUTES * 60 * 1000);
   await iotRepository.insertEvent({
     type: 'scenario_boost',
     zoneId: zone.id,
