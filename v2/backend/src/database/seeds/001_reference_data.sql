@@ -5,25 +5,32 @@ INSERT INTO roles (id, name) VALUES
   (1, 'user'), (2, 'employee'), (3, 'admin')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO authors (id, name) VALUES
-  (1, 'Antoine de Saint-Exupéry'),
-  (2, 'Jules Verne'),
-  (3, 'George Orwell'),
-  (4, 'Harper Lee')
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO authors (id, name, photo_url) VALUES
+  (1, 'Antoine de Saint-Exupéry', '/authors/saint-exupery.jpg'),
+  (2, 'Jules Verne', '/authors/jules-verne.jpg'),
+  (3, 'George Orwell', '/authors/orwell.jpg'),
+  (4, 'Harper Lee', '/authors/harper-lee.jpg'),
+  (5, 'Ray Bradbury', '/authors/bradbury.jpg'),
+  (6, 'J.K. Rowling', '/authors/rowling.jpg')
+ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, photo_url = EXCLUDED.photo_url;
 
 INSERT INTO genres (id, label) VALUES
   (1, 'Littérature'),
   (2, 'Science-fiction'),
   (3, 'Aventure'),
-  (4, 'Classique')
+  (4, 'Classique'),
+  (5, 'Fantastique')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO books (id, title, description, format, published_year, cover_url) VALUES
   (1, 'Le Petit Prince', 'Un aviateur en panne dans le désert rencontre un jeune prince venu d''un autre monde.', 'papier', 1943, '/covers/le-petit-prince.jpg'),
   (2, 'Voyage au centre de la Terre', 'Un savant et son neveu explorent les entrailles de la Terre.', 'papier', 1864, '/covers/voyage-centre-terre.jpg'),
   (3, '1984', 'Une dystopie totalitaire où Big Brother surveille chaque citoyen.', 'papier', 1949, '/covers/1984.jpg'),
-  (4, 'Ne tirez pas sur l''oiseau moqueur', 'Un avocat défend un homme injustement accusé dans le sud des États-Unis.', 'papier', 1960, '/covers/mockingbird.jpg')
+  (4, 'Ne tirez pas sur l''oiseau moqueur', 'Un avocat défend un homme injustement accusé dans le sud des États-Unis.', 'papier', 1960, '/covers/mockingbird.jpg'),
+  (5, 'Fahrenheit 451', 'Dans une société où les livres sont interdits et brûlés, un pompier pyromane commence à douter de sa mission.', 'papier', 1953, '/covers/fahrenheit451.jpg'),
+  (6, 'Harry Potter à l''école des sorciers', 'Un jeune sorcier découvre son destin en intégrant l''école de Poudlard.', 'papier', 1997, '/covers/harry-potter-1.jpg'),
+  (7, 'Le Tour du monde en 80 jours', 'Phileas Fogg parie qu''il peut faire le tour du monde en seulement 80 jours.', 'papier', 1872, '/covers/tour-du-monde-80-jours.jpg'),
+  (8, 'Terre des Hommes', 'Récit et réflexions d''un aviateur sur le métier, le courage et la fraternité humaine.', 'papier', 1939, '/covers/terre-des-hommes.jpg')
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
@@ -32,14 +39,19 @@ ON CONFLICT (id) DO UPDATE SET
   cover_url = EXCLUDED.cover_url;
 
 INSERT INTO book_authors (book_id, author_id) VALUES
-  (1, 1), (2, 2), (3, 3), (4, 4)
+  (1, 1), (2, 2), (3, 3), (4, 4),
+  (5, 5), (6, 6), (7, 2), (8, 1)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO book_genres (book_id, genre_id) VALUES
   (1, 1), (1, 3),
   (2, 2), (2, 3),
   (3, 2), (3, 4),
-  (4, 1), (4, 4)
+  (4, 1), (4, 4),
+  (5, 2), (5, 4),
+  (6, 5), (6, 3),
+  (7, 3), (7, 1),
+  (8, 1), (8, 3)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO copies (id, book_id, state, available) VALUES
@@ -48,7 +60,14 @@ INSERT INTO copies (id, book_id, state, available) VALUES
   (3, 2, 'usé', false),
   (4, 3, 'neuf', true),
   (5, 3, 'bon', true),
-  (6, 4, 'bon', true)
+  (6, 4, 'bon', true),
+  (7, 5, 'bon', true),
+  (8, 5, 'bon', true),
+  (9, 6, 'neuf', true),
+  (10, 6, 'bon', true),
+  (11, 7, 'bon', true),
+  (12, 8, 'bon', true),
+  (13, 8, 'usé', true)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO rooms (id, name, capacity) VALUES
