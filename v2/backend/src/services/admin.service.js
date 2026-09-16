@@ -1,6 +1,7 @@
 import * as analyticsRepository from '../repositories/analytics.repository.js';
 import { listAllUsers, setUserRole } from '../repositories/users.repository.js';
 import { insertLog, listRecentLogs } from '../repositories/logs.repository.js';
+import { listAllLoans } from '../repositories/loans.repository.js';
 import { HttpError } from '../utils/HttpError.js';
 
 export const getOverview = analyticsRepository.getOverview;
@@ -9,6 +10,7 @@ export const getPopularGenres = analyticsRepository.getPopularGenres;
 export const getLoanTrends = analyticsRepository.getLoanTrends;
 export const getUsers = listAllUsers;
 export const getLogs = listRecentLogs;
+export const getAllLoans = listAllLoans;
 
 export async function changeUserRole({ targetUserId, role, actingUserId }) {
   if (targetUserId === actingUserId) {

@@ -15,6 +15,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import { useAuth } from '../../context/AuthContext';
 import * as adminService from '../../services/adminService';
 import { StaffNav } from '../../components/StaffNav';
+import { downloadCsv } from '../../lib/downloadCsv';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip);
 
@@ -92,6 +93,14 @@ export default function AdminDashboardPage() {
     }
   }
 
+  async function handleExport(path, filename) {
+    try {
+      await downloadCsv(path, accessToken, filename);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   if (loading) return <p className="p-10 text-text-secondary">Chargement...</p>;
 
   if (!user || user.role !== 'admin') {
@@ -109,7 +118,23 @@ export default function AdminDashboardPage() {
     <>
       <StaffNav role="admin" />
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 px-4 py-10">
-      <h1 className="text-2xl font-semibold text-text">Dashboard admin</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-text">Dashboard admin</h1>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleExport('/api/admin/export/users.csv', 'utilisateurs.csv')}
+            className="rounded-md border border-black/15 px-3 py-1.5 text-sm text-text"
+          >
+            ⬇️ Utilisateurs
+          </button>
+          <button
+            onClick={() => handleExport('/api/admin/export/loans.csv', 'prets.csv')}
+            className="rounded-md border border-black/15 px-3 py-1.5 text-sm text-text"
+          >
+            ⬇️ Prêts
+          </button>
+        </div>
+      </div>
 
       {error && <p className="text-bordeaux">{error}</p>}
 

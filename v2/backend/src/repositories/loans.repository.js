@@ -78,6 +78,19 @@ export async function returnLoanByCopy(copyId) {
   }
 }
 
+export async function listAllLoans() {
+  const result = await pool.query(
+    `SELECT l.id, u.name AS user_name, u.email,
+            b.title, l.loan_date::text, l.due_date::text, l.return_date::text
+     FROM loans l
+     JOIN users u ON u.id = l.user_id
+     JOIN copies c ON c.id = l.copy_id
+     JOIN books b ON b.id = c.book_id
+     ORDER BY l.loan_date DESC, l.id DESC`
+  );
+  return result.rows;
+}
+
 export async function listLoansByUser(userId) {
   const result = await pool.query(
     `SELECT l.id, l.loan_date::text, l.due_date::text, l.return_date::text,

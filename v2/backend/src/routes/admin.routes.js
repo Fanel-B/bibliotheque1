@@ -21,3 +21,5 @@ adminRouter.get('/analytics/overview', asyncHandler(adminController.overview));
 adminRouter.get('/analytics/popular-books', asyncHandler(adminController.popularBooks));
 adminRouter.get('/analytics/popular-genres', asyncHandler(adminController.popularGenres));
 adminRouter.get('/analytics/trends', asyncHandler(adminController.trends));
+adminRouter.get('/export/users.csv', asyncHandler(adminController.exportUsers));
+adminRouter.get('/export/loans.csv', asyncHandler(adminController.exportLoans));
