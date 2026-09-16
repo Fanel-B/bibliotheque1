@@ -16,6 +16,17 @@ export async function findUserById(id) {
   return result.rows[0] ?? null;
 }
 
+export async function setUserRole(userId, roleName) {
+  const result = await pool.query(
+    `UPDATE users SET role_id = (SELECT id FROM roles WHERE name = $2)
+     WHERE id = $1
+     RETURNING id, name, email, created_at`,
+    [userId, roleName]
+  );
+  if (!result.rows[0]) return null;
+  return { ...result.rows[0], role: roleName };
+}
+
 export async function listAllUsers() {
   const result = await pool.query(
     `SELECT u.id, u.name, u.email, r.name AS role, u.created_at

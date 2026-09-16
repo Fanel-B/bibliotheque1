@@ -45,6 +45,16 @@ export default function AdminDashboardPage() {
   const [users, setUsers] = useState([]);
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState(null);
+  const [savingUserId, setSavingUserId] = useState(null);
+
+  function refreshUsersAndLogs() {
+    Promise.all([adminService.getUsers(accessToken), adminService.getLogs(accessToken)])
+      .then(([us, lg]) => {
+        setUsers(us.users);
+        setLogs(lg.logs);
+      })
+      .catch((err) => setError(err.message));
+  }
 
   useEffect(() => {
     if (!accessToken) return;
@@ -65,7 +75,21 @@ export default function AdminDashboardPage() {
         setLogs(lg.logs);
       })
       .catch((err) => setError(err.message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
+
+  async function handleRoleChange(targetUser, role) {
+    setSavingUserId(targetUser.id);
+    setError(null);
+    try {
+      await adminService.changeUserRole(accessToken, targetUser.id, role);
+      refreshUsersAndLogs();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSavingUserId(null);
+    }
+  }
 
   if (loading) return <p className="p-10 text-text-secondary">Chargement...</p>;
 
@@ -187,14 +211,35 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
-                <tr key={u.id} className="border-t border-black/10 text-text">
-                  <td className="py-2">{u.name}</td>
-                  <td className="py-2">{u.email}</td>
-                  <td className="py-2">{u.role}</td>
-                  <td className="py-2">{new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
-                </tr>
-              ))}
+              {users.map((u) => {
+                const isSelf = u.id === user.id;
+                return (
+                  <tr key={u.id} className="border-t border-black/10 text-text">
+                    <td className="py-2">{u.name}</td>
+                    <td className="py-2">{u.email}</td>
+                    <td className="py-2">
+                      <select
+                        value={u.role}
+                        disabled={isSelf || savingUserId === u.id}
+                        onChange={(e) => handleRoleChange(u, e.target.value)}
+                        title={isSelf ? 'Tu ne peux pas changer ton propre rôle' : undefined}
+                        className={`rounded-md border px-2 py-1 text-xs ${
+                          u.role === 'admin'
+                            ? 'border-bordeaux/30 bg-error text-bordeaux'
+                            : u.role === 'employee'
+                              ? 'border-blue/30 bg-blue/10 text-blue'
+                              : 'border-black/15 bg-bg text-text'
+                        } disabled:opacity-60`}
+                      >
+                        <option value="user">user</option>
+                        <option value="employee">employee</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    </td>
+                    <td className="py-2">{new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

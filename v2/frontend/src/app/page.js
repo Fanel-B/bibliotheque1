@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';
 import Image from 'next/image';
+import { useAuth } from '../context/AuthContext';
 import { myRecommendations } from '../services/recommendationsService';
+
+const STAFF_LINKS = {
+  employee: { href: '/employe', label: '🗂️ Aller à mon espace employé', bg: 'bg-blue' },
+  admin: { href: '/admin', label: '📊 Aller au dashboard admin', bg: 'bg-bordeaux' },
+};
 
 export default function Home() {
   const { user, accessToken, loading, logout } = useAuth();
@@ -17,120 +22,111 @@ export default function Home() {
       .catch(() => {});
   }, [accessToken]);
 
-  return (
-    <main className="flex min-h-full flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
-      <span className="rounded-full bg-success px-3 py-1 text-xs font-medium tracking-wide text-accent uppercase">
-        En construction
-      </span>
-      <h1 className="text-3xl font-semibold text-text">Biblio-Tech 2.0</h1>
-      <p className="max-w-md text-text-secondary">
-        Frontend et backend sont branchés et fonctionnels. Les vraies pages
-        (prêts, réservations, IoT) arrivent phase par phase.
-      </p>
+  const staffLink = user ? STAFF_LINKS[user.role] : null;
 
-      <div className="flex flex-wrap justify-center gap-2">
-        <Link
-          href="/catalogue"
-          className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
-        >
-          📖 Voir le catalogue
-        </Link>
-        {user && (
+  return (
+    <main className="flex min-h-full flex-1 flex-col">
+      <section className="bg-gradient-to-br from-accent to-[#123f16] px-4 py-14 text-center text-white">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4">
+          <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide">
+            Smart Library
+          </span>
+          <h1 className="text-4xl font-semibold">Biblio-Tech</h1>
+          <p className="max-w-md text-white/85">
+            Votre bibliothèque intelligente : catalogue, emprunts, réservations de
+            salles, et une couche domotique simulée en temps réel.
+          </p>
+
+          {loading ? null : user ? (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <span className="text-sm text-white/85">
+                Connecté en tant que <strong>{user.name}</strong>
+              </span>
+              <button
+                onClick={logout}
+                className="rounded-md bg-white/15 px-3 py-1.5 text-sm hover:bg-white/25"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/login" className="rounded-md bg-white px-5 py-2.5 font-medium text-accent">
+                Se connecter
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-md border border-white/40 px-5 py-2.5 font-medium text-white"
+              >
+                S'inscrire
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8">
+        {staffLink && (
           <Link
-            href="/mes-emprunts"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+            href={staffLink.href}
+            className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium text-white ${staffLink.bg}`}
           >
-            📚 Mes emprunts
+            <span>{staffLink.label}</span>
+            <span>→</span>
           </Link>
         )}
-        {user && (
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Link
-            href="/mes-reservations"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+            href="/catalogue"
+            className="flex flex-col gap-1 rounded-xl bg-accent-soft p-5 text-accent shadow-sm transition hover:shadow-md"
           >
-            🗓️ Mes réservations
+            <span className="text-2xl">📖</span>
+            <span className="font-semibold">Catalogue</span>
+            <span className="text-sm opacity-80">Rechercher un livre</span>
           </Link>
-        )}
-        {user && ['employee', 'admin'].includes(user.role) && (
           <Link
-            href="/employe/pret"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+            href={user ? '/mes-emprunts' : '/login'}
+            className="flex flex-col gap-1 rounded-xl bg-blue-soft p-5 text-blue shadow-sm transition hover:shadow-md"
           >
-            🗂️ Poste de prêt
+            <span className="text-2xl">📚</span>
+            <span className="font-semibold">Mes emprunts</span>
+            <span className="text-sm opacity-80">Suivre mes prêts en cours</span>
           </Link>
-        )}
-        {user && ['employee', 'admin'].includes(user.role) && (
           <Link
-            href="/iot"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
+            href={user ? '/mes-reservations' : '/login'}
+            className="flex flex-col gap-1 rounded-xl bg-bordeaux-soft p-5 text-bordeaux shadow-sm transition hover:shadow-md"
           >
-            🌐 Smart Library
+            <span className="text-2xl">🗓️</span>
+            <span className="font-semibold">Mes réservations</span>
+            <span className="text-sm opacity-80">Réserver une salle</span>
           </Link>
-        )}
-        {user && user.role === 'admin' && (
-          <Link
-            href="/admin"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
-          >
-            📊 Dashboard admin
-          </Link>
-        )}
-        {user && user.role === 'admin' && (
-          <Link
-            href="/automatisations"
-            className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-text"
-          >
-            ⚙️ Automatisations
-          </Link>
+        </div>
+
+        {user && recommendations.length > 0 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+              Recommandé pour vous
+            </h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {recommendations.map((book) => (
+                <Link
+                  key={book.id}
+                  href={`/catalogue/${book.id}`}
+                  className="flex flex-col overflow-hidden rounded-lg border border-black/10 bg-surface text-left shadow-sm transition hover:shadow-md"
+                >
+                  <div className="relative aspect-[2/3] w-full bg-black/5">
+                    {book.cover_url && (
+                      <Image src={book.cover_url} alt={book.title} fill className="object-cover" />
+                    )}
+                  </div>
+                  <p className="p-2 text-xs font-medium text-text">{book.title}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
         )}
       </div>
-
-      {user && recommendations.length > 0 && (
-        <section className="mt-4 flex w-full max-w-3xl flex-col gap-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
-            Recommandé pour vous
-          </h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {recommendations.map((book) => (
-              <Link
-                key={book.id}
-                href={`/catalogue/${book.id}`}
-                className="flex flex-col overflow-hidden rounded-lg border border-black/10 bg-surface text-left shadow-sm transition hover:shadow-md"
-              >
-                <div className="relative aspect-[2/3] w-full bg-black/5">
-                  {book.cover_url && (
-                    <Image src={book.cover_url} alt={book.title} fill className="object-cover" />
-                  )}
-                </div>
-                <p className="p-2 text-xs font-medium text-text">{book.title}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {loading ? (
-        <p className="text-sm text-text-secondary">Vérification de la session...</p>
-      ) : user ? (
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-text">
-            Connecté en tant que <strong>{user.name}</strong> ({user.role})
-          </p>
-          <button
-            onClick={logout}
-            className="rounded-md border border-black/15 px-4 py-2 text-sm text-text"
-          >
-            Se déconnecter
-          </button>
-        </div>
-      ) : (
-        <Link
-          href="/login"
-          className="rounded-md bg-accent px-4 py-2 font-medium text-white"
-        >
-          Se connecter
-        </Link>
-      )}
     </main>
   );
 }

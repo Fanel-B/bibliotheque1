@@ -33,6 +33,16 @@ export function AuthProvider({ children }) {
     return user;
   }, []);
 
+  // L'inscription ne renvoie pas de token (elle crée juste le compte) —
+  // on enchaîne avec une connexion pour que l'expérience reste fluide.
+  const register = useCallback(
+    async (name, email, password) => {
+      await authService.register(name, email, password);
+      return login(email, password);
+    },
+    [login]
+  );
+
   const logout = useCallback(async () => {
     await authService.logout();
     setUser(null);
@@ -40,7 +50,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, accessToken, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,8 +8,11 @@
   --color-bg: #F9F6F0;
   --color-surface: #FFFFFF;
   --color-accent: #1B5E20;
+  --color-accent-soft: #DCEFDD;
   --color-blue: #1565C0;
+  --color-blue-soft: #DCEAFA;
   --color-bordeaux: #7B1D1D;
+  --color-bordeaux-soft: #F3DCDC;
   --color-text: #2C1810;
   --color-text-secondary: #5D4037;
   --color-success: #E8F5E9;
@@ -23,8 +26,11 @@
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
   --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
   --color-blue: var(--color-blue);
+  --color-blue-soft: var(--color-blue-soft);
   --color-bordeaux: var(--color-bordeaux);
+  --color-bordeaux-soft: var(--color-bordeaux-soft);
   --color-text: var(--color-text);
   --color-text-secondary: var(--color-text-secondary);
   --color-success: var(--color-success);

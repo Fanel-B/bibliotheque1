@@ -23,3 +23,11 @@ export function getUsers(accessToken) {
 export function getLogs(accessToken) {
   return apiClient('/api/admin/logs', { accessToken });
 }
+
+export function changeUserRole(accessToken, userId, role) {
+  return apiClient(`/api/admin/users/${userId}/role`, {
+    method: 'PATCH',
+    accessToken,
+    body: { role },
+  });
+}

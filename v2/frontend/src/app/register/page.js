@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
-import { roleHomePath } from '../../lib/roleHome';
 
-export default function LoginPage() {
-  const { login } = useAuth();
+export default function RegisterPage() {
+  const { register } = useAuth();
   const router = useRouter();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -19,8 +19,9 @@ export default function LoginPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const user = await login(email, password);
-      router.push(roleHomePath(user.role));
+      await register(name, email, password);
+      // L'inscription publique crée toujours un compte "user".
+      router.push('/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -29,18 +30,31 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-full flex-1 items-center justify-center bg-gradient-to-br from-bg via-bg to-accent-soft/60 px-4 py-10">
+    <main className="flex min-h-full flex-1 items-center justify-center bg-gradient-to-br from-bg via-bg to-blue-soft/60 px-4 py-10">
       <form
         onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-xl border-t-4 border-accent bg-surface p-8 shadow-md"
+        className="flex w-full max-w-sm flex-col gap-4 rounded-xl border-t-4 border-blue bg-surface p-8 shadow-md"
       >
-        <h1 className="text-xl font-semibold text-text">Connexion</h1>
+        <h1 className="text-xl font-semibold text-text">Inscription</h1>
+        <p className="text-sm text-text-secondary">
+          Crée ton compte pour emprunter des livres et réserver une salle.
+        </p>
 
         {error && (
-          <p className="rounded-md bg-error px-3 py-2 text-sm text-bordeaux">
-            {error}
-          </p>
+          <p className="rounded-md bg-error px-3 py-2 text-sm text-bordeaux">{error}</p>
         )}
+
+        <label className="flex flex-col gap-1 text-sm text-text-secondary">
+          Nom
+          <input
+            type="text"
+            required
+            minLength={2}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="rounded-md border border-black/15 px-3 py-2 text-text"
+          />
+        </label>
 
         <label className="flex flex-col gap-1 text-sm text-text-secondary">
           Email
@@ -58,29 +72,27 @@ export default function LoginPage() {
           <input
             type="password"
             required
+            minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="rounded-md border border-black/15 px-3 py-2 text-text"
           />
+          <span className="text-xs text-text-secondary">8 caractères minimum.</span>
         </label>
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-md bg-accent px-4 py-2 font-medium text-white disabled:opacity-60"
+          className="mt-2 rounded-md bg-blue px-4 py-2 font-medium text-white disabled:opacity-60"
         >
-          {submitting ? 'Connexion...' : 'Se connecter'}
+          {submitting ? 'Création du compte...' : "S'inscrire"}
         </button>
 
         <p className="text-center text-sm text-text-secondary">
-          Pas encore de compte ?{' '}
-          <Link href="/register" className="font-medium text-accent underline">
-            S'inscrire
+          Déjà un compte ?{' '}
+          <Link href="/login" className="font-medium text-accent underline">
+            Se connecter
           </Link>
-        </p>
-
-        <p className="text-center text-xs text-text-secondary">
-          Compte de démo : admin@bibliotech.demo / demo1234
         </p>
       </form>
     </main>
