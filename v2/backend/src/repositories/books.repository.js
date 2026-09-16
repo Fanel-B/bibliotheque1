@@ -41,7 +41,11 @@ export async function getBookById(id) {
     `
     SELECT
       b.id, b.title, b.description, b.format, b.published_year, b.cover_url,
-      COALESCE(array_agg(DISTINCT a.name) FILTER (WHERE a.name IS NOT NULL), '{}') AS authors,
+      COALESCE(
+        json_agg(DISTINCT jsonb_build_object('name', a.name, 'photo_url', a.photo_url))
+          FILTER (WHERE a.name IS NOT NULL),
+        '[]'
+      ) AS authors,
       COALESCE(array_agg(DISTINCT g.label) FILTER (WHERE g.label IS NOT NULL), '{}') AS genres
     FROM books b
     LEFT JOIN book_authors ba ON ba.book_id = b.id

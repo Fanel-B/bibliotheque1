@@ -30,7 +30,18 @@ export default async function BookDetailPage({ params }) {
 
         <div className="flex flex-1 flex-col gap-3">
           <h1 className="text-2xl font-semibold text-text">{book.title}</h1>
-          <p className="text-text-secondary">{book.authors.join(', ')}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            {book.authors.map((author) => (
+              <span key={author.name} className="flex items-center gap-2 text-text-secondary">
+                {author.photo_url && (
+                  <span className="relative block h-8 w-8 overflow-hidden rounded-full bg-black/5">
+                    <Image src={author.photo_url} alt={author.name} fill className="object-cover" />
+                  </span>
+                )}
+                {author.name}
+              </span>
+            ))}
+          </div>
 
           <div className="flex flex-wrap gap-2">
             {book.genres.map((genre) => (
