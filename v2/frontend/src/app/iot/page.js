@@ -14,6 +14,7 @@ import { Line } from 'react-chartjs-2';
 import { useAuth } from '../../context/AuthContext';
 import * as iotService from '../../services/iotService';
 import { LibraryMap } from '../../components/LibraryMap';
+import { RoomsStatus } from '../../components/RoomsStatus';
 import { StaffNav } from '../../components/StaffNav';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
@@ -183,6 +184,8 @@ export default function IotDashboardPage() {
       )}
 
       {zones.length > 0 && <LibraryMap zones={zones} />}
+
+      <RoomsStatus />
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {zones.map((zone) => (
