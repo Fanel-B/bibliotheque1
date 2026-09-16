@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext';
 import * as iotService from '../../services/iotService';
+import { StaffNav } from '../../components/StaffNav';
 
 export default function EspaceEmployePage() {
   const { user, accessToken, loading, logout } = useAuth();
@@ -31,7 +32,9 @@ export default function EspaceEmployePage() {
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col">
+    <>
+      <StaffNav role={user.role} />
+      <main className="flex min-h-full flex-1 flex-col">
       <div className="bg-blue px-4 py-10 text-white">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-1">
           <span className="text-xs font-medium uppercase tracking-wide text-blue-soft">
@@ -92,6 +95,7 @@ export default function EspaceEmployePage() {
           </button>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

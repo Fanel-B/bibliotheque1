@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '../../../context/AuthContext';
 import { searchBooks, getBook } from '../../../services/booksService';
 import { createLoan, returnLoan } from '../../../services/loansService';
+import { StaffNav } from '../../../components/StaffNav';
 
 export default function PosteDePretPage() {
   const { user, accessToken, loading } = useAuth();
@@ -40,13 +41,10 @@ export default function PosteDePretPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Poste de prêt</h1>
-        <Link href="/" className="text-sm text-text-secondary underline">
-          ← Accueil
-        </Link>
-      </div>
+    <>
+      <StaffNav role={user.role} />
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10">
+      <h1 className="text-2xl font-semibold text-text">Poste de prêt</h1>
 
       <label className="flex flex-col gap-1 text-sm text-text-secondary">
         Email de l'emprunteur (pour un nouveau prêt)
@@ -93,7 +91,8 @@ export default function PosteDePretPage() {
           </li>
         ))}
       </ul>
-    </main>
+      </main>
+    </>
   );
 }
 

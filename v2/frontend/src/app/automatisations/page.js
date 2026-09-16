@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext';
 import * as automationsService from '../../services/automationsService';
+import { StaffNav } from '../../components/StaffNav';
 
 const METRIC_LABELS = {
   temperature: 'la température',
@@ -69,13 +70,10 @@ export default function AutomationsPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Automatisations</h1>
-        <Link href="/" className="text-sm text-text-secondary underline">
-          ← Accueil
-        </Link>
-      </div>
+    <>
+      <StaffNav role="admin" />
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10">
+      <h1 className="text-2xl font-semibold text-text">Automatisations</h1>
 
       {message && <p className="text-bordeaux">{message.text}</p>}
 
@@ -124,6 +122,7 @@ export default function AutomationsPage() {
           </ul>
         )}
       </section>
-    </main>
+      </main>
+    </>
   );
 }

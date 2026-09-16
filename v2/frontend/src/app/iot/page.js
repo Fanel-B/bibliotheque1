@@ -14,6 +14,7 @@ import { Line } from 'react-chartjs-2';
 import { useAuth } from '../../context/AuthContext';
 import * as iotService from '../../services/iotService';
 import { LibraryMap } from '../../components/LibraryMap';
+import { StaffNav } from '../../components/StaffNav';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
 
@@ -131,13 +132,10 @@ export default function IotDashboardPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Smart Library — IoT</h1>
-        <Link href="/" className="text-sm text-text-secondary underline">
-          ← Accueil
-        </Link>
-      </div>
+    <>
+      <StaffNav role={user.role} />
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-10">
+      <h1 className="text-2xl font-semibold text-text">Smart Library — IoT</h1>
 
       {message && (
         <p className={message.type === 'error' ? 'text-bordeaux' : 'text-accent'}>{message.text}</p>
@@ -275,6 +273,7 @@ export default function IotDashboardPage() {
           />
         </section>
       )}
-    </main>
+      </main>
+    </>
   );
 }

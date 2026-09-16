@@ -14,6 +14,7 @@ import {
 import { Bar, Line } from 'react-chartjs-2';
 import { useAuth } from '../../context/AuthContext';
 import * as adminService from '../../services/adminService';
+import { StaffNav } from '../../components/StaffNav';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip);
 
@@ -105,13 +106,10 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Dashboard admin</h1>
-        <Link href="/" className="text-sm text-text-secondary underline">
-          ← Accueil
-        </Link>
-      </div>
+    <>
+      <StaffNav role="admin" />
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 px-4 py-10">
+      <h1 className="text-2xl font-semibold text-text">Dashboard admin</h1>
 
       {error && <p className="text-bordeaux">{error}</p>}
 
@@ -266,6 +264,7 @@ export default function AdminDashboardPage() {
           </ul>
         )}
       </section>
-    </main>
+      </main>
+    </>
   );
 }
