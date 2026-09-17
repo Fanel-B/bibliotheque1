@@ -1,4 +1,8 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// .trim() : une variable d'environnement collée avec un espace ou un retour
+// à la ligne produit une URL invalide et fetch() échoue avec "Failed to
+// fetch" sans autre détail (vu sur Render avec FRONTEND_URL — même piège
+// possible ici avec NEXT_PUBLIC_API_URL).
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? '').trim();
 
 export async function apiClient(path, { method = 'GET', body, accessToken } = {}) {
   const headers = { 'Content-Type': 'application/json' };
