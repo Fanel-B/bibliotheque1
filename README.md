@@ -47,11 +47,12 @@ Biblio-Tech est la reconstruction complète d'un projet universitaire PHP/MySQL 
 
 | Couche | Choix | Pourquoi |
 |---|---|---|
-| Frontend | Next.js (App Router) + Tailwind CSS | Déploiement Vercel natif, très reconnu |
-| Backend | Node.js + Express, architecture en couches (routes → controllers → services → repositories) | Explicite, sans magie |
-| Base de données | PostgreSQL (Neon, serverless) | SQL brut visible dans les repositories — pas d'ORM qui masque la logique |
-| Graphiques | Chart.js | KPIs, tendances, historique capteurs |
-| Auth | JWT (access + refresh en cookie httpOnly) + bcrypt | Stateless, adapté à deux domaines séparés (Vercel/Render) |
+| Frontend | Next.js 16.3 (App Router) + React 19.2, Tailwind CSS 4 | Déploiement Vercel natif, très reconnu |
+| Backend | Node.js (≥ 18.18) + Express 4.19, architecture en couches (routes → controllers → services → repositories) | Explicite, sans magie |
+| Base de données | PostgreSQL (Neon, serverless), client `pg` 8.12 | SQL brut visible dans les repositories — pas d'ORM qui masque la logique |
+| Graphiques | Chart.js 4.5 via react-chartjs-2 5.3 | KPIs, tendances, historique capteurs |
+| Auth | JWT 9.0 (access + refresh en cookie httpOnly) + bcryptjs 3.0 | Stateless, adapté à deux domaines séparés (Vercel/Render) |
+| Validation | Zod 3.23 sur les entrées de l'API | Les erreurs de saisie sont rejetées avant d'atteindre les services |
 | Déploiement | Vercel (frontend) + Render (backend) | Gratuit, CI/CD intégrée |
 
 ## Démarrer en local
