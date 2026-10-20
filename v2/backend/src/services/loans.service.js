@@ -13,7 +13,7 @@ function logSafely(entry) {
 
 const LOAN_DURATION_DAYS = 14;
 
-function withStatus(loan) {
+export function withStatus(loan) {
   const today = isoDateInDays(0);
   let status = 'en_cours';
   if (loan.return_date) status = 'retourne';

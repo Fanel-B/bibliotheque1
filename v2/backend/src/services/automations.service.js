@@ -2,7 +2,7 @@ import * as automationsRepository from '../repositories/automations.repository.j
 import * as iotRepository from '../repositories/iot.repository.js';
 import { isLibraryOpen } from './simulator.service.js';
 
-function compare(value, operator, threshold) {
+export function compare(value, operator, threshold) {
   switch (operator) {
     case '>':
       return value > threshold;
