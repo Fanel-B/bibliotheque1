@@ -1,0 +1,69 @@
+# Lance tout le back-end de Biblio-Tech en local avec une seule commande :
+#   docker compose up --build
+# Avant la première fois : copier .env.example en .env et remplir les valeurs.
+
+services:
+  # Base PostgreSQL 16.
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Copie .env.example en .env et remplis POSTGRES_PASSWORD}
+      POSTGRES_DB: bibliotech
+    volumes:
+      # Les données sont stockées dans un volume nommé : elles survivent à
+      # "docker compose down" et au redémarrage des conteneurs.
+      - db-data:/var/lib/postgresql/data
+    # Pas de "ports" : la base n'est joignable que par les autres services
+    # de ce fichier, jamais depuis l'extérieur.
+    healthcheck:
+      # La base est "saine" quand elle accepte les connexions.
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bibliotech"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # API REST Node.js / Express.
+  api:
+    build: ./v2/backend
+    environment:
+      PORT: 4000
+      # "db" est le nom du service ci-dessus : Docker le résout en adresse IP.
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/bibliotech
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Remplis JWT_ACCESS_SECRET dans .env}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?Remplis JWT_REFRESH_SECRET dans .env}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+    depends_on:
+      db:
+        # On attend que la base soit vraiment prête, pas seulement démarrée.
+        condition: service_healthy
+    # Au démarrage : création des tables, données de démonstration, puis
+    # lancement de l'API. Les deux scripts peuvent être rejoués sans risque.
+    command: sh -c "npm run migrate && npm run seed && npm start"
+    ports:
+      - "4000:4000"
+    healthcheck:
+      # L'image alpine n'a pas curl : on interroge /api/health avec Node.
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Service Java Spring Boot de détection des emprunts en retard.
+  reminders:
+    build: ./v2/reminders-service
+    environment:
+      PORT: 8081
+      # Même base que l'API, mais au format JDBC attendu par Java.
+      DB_URL: jdbc:postgresql://db:5432/bibliotech
+      DB_USER: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      api:
+        # On attend que l'API ait créé les tables (migration + seed).
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+
+volumes:
+  db-data:
