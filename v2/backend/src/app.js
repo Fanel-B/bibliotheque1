@@ -36,7 +36,7 @@ app.use(helmet());
 
 // .trim() : une variable d'environnement collée avec un retour à la ligne
 // (fréquent en copiant-collant une URL) fait planter le module "cors" avec
-// ERR_INVALID_CHAR — une valeur invalide dans un en-tête HTTP.
+// ERR_INVALID_CHAR, une valeur invalide dans un en-tête HTTP.
 const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:3000').trim();
 
 app.use(

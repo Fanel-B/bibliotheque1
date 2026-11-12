@@ -1,7 +1,7 @@
 # Dépendances
 node_modules/
 
-# Variables d'environnement (secrets — ne jamais committer)
+# Variables d'environnement (secrets : ne jamais committer)
 .env
 .env.local
 .env.test
