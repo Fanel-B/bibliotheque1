@@ -6,6 +6,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { healthRouter } from './routes/health.routes.js';
 import { authRouter } from './routes/auth.routes.js';
 import { booksRouter } from './routes/books.routes.js';
@@ -19,6 +20,19 @@ import { recommendationsRouter } from './routes/recommendations.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
 export const app = express();
+
+// En production, Render place un proxy devant l'API : sans ce réglage,
+// Express verrait l'IP du proxy pour toutes les requêtes, et la limite de
+// tentatives de connexion serait partagée par tous les utilisateurs.
+// "1" = on fait confiance à un seul proxy, celui de l'hébergeur.
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
+// helmet ajoute des en-têtes HTTP de sécurité à toutes les réponses
+// (interdire l'affichage dans une iframe, empêcher le navigateur de
+// deviner le type d'un fichier, forcer HTTPS, masquer "X-Powered-By"...).
+app.use(helmet());
 
 // .trim() : une variable d'environnement collée avec un retour à la ligne
 // (fréquent en copiant-collant une URL) fait planter le module "cors" avec
