@@ -16,6 +16,22 @@
 
 > Le backend est hébergé sur une offre gratuite qui se met en veille après 15 min d'inactivité : le premier chargement peut prendre 30 à 50 secondes.
 
+## En bref
+
+| | |
+|---|---|
+| **Quoi** | Application full-stack de gestion de bibliothèque, reconstruite à partir d'un ancien projet PHP audité |
+| **Stack** | Next.js / React, API Node.js Express, service Java Spring Boot, PostgreSQL, Docker |
+| **Qualité** | 12 tests d'intégration (Vitest + Supertest) sur une vraie base, 4 tests JUnit, dont un test qui prouve que deux employés ne peuvent pas prêter le même livre au même instant |
+| **Sécurité** | JWT avec jeton de rafraîchissement en cookie httpOnly, bcrypt, validation Zod, en-têtes helmet, limite des tentatives de connexion |
+| **Essayer** | [Démo en ligne](https://bibliotheque1.vercel.app) avec les comptes ci-dessous, ou `docker compose up --build` en local |
+
+| Dashboard admin | Smart Library (IoT simulé) |
+|---|---|
+| ![Dashboard admin](docs/captures/dashboard-admin.png) | ![Plan interactif Smart Library](docs/captures/smart-library.png) |
+
+![Catalogue](docs/captures/catalogue.png)
+
 ---
 
 ## Comptes de démonstration
