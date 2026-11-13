@@ -1,0 +1,3 @@
+# Le dossier de compilation local n'a rien à faire dans l'image :
+# le .jar est recompilé à l'intérieur du Dockerfile.
+target

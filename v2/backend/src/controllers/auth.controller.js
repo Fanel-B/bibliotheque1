@@ -24,7 +24,14 @@ export async function refresh(req, res) {
 }
 
 export function logout(req, res) {
-  res.clearCookie(REFRESH_COOKIE_NAME, { path: '/api/auth' });
+  // Le navigateur n'efface un cookie que si on lui renvoie les mêmes
+  // attributs qu'à sa création (path, secure, sameSite). En production, un
+  // effacement sans "SameSite=None; Secure" serait refusé (front et API sont
+  // sur deux domaines différents) et l'utilisateur resterait connecté.
+  // On retire maxAge : avec Express 4, il remplacerait la date d'expiration
+  // passée par une date future, et le cookie ne serait pas effacé.
+  const { maxAge, ...cookieOptions } = refreshCookieOptions();
+  res.clearCookie(REFRESH_COOKIE_NAME, cookieOptions);
   res.status(204).send();
 }
 

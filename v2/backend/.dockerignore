@@ -1,0 +1,7 @@
+# Fichiers à ne jamais envoyer à Docker pendant la construction de l'image :
+# les dépendances sont réinstallées dans l'image, et les .env contiennent
+# des secrets.
+node_modules
+.env
+.env.*
+tests

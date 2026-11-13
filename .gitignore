@@ -1,9 +1,10 @@
 # Dépendances
 node_modules/
 
-# Variables d'environnement (secrets — ne jamais committer)
+# Variables d'environnement (secrets : ne jamais committer)
 .env
 .env.local
+.env.test
 
 # Next.js
 v2/frontend/.next/
