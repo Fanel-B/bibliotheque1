@@ -13,20 +13,17 @@ import { roleHomePath } from '../../lib/roleHome';
 const ROLE_META = {
   user: {
     title: 'Connexion usager',
-    borderClass: 'border-accent',
-    buttonClass: 'bg-accent',
+    borderClass: 'border-rose',
     hint: null,
   },
   employee: {
     title: 'Connexion employé',
-    borderClass: 'border-blue',
-    buttonClass: 'bg-blue',
+    borderClass: 'border-tangerine',
     hint: "Réservé au personnel. Pas de compte ? Demande à un administrateur.",
   },
   admin: {
     title: 'Connexion admin',
-    borderClass: 'border-bordeaux',
-    buttonClass: 'bg-bordeaux',
+    borderClass: 'border-lilac',
     hint: 'Réservé aux administrateurs.',
   },
 };
@@ -62,16 +59,16 @@ function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-full flex-1 items-center justify-center bg-gradient-to-br from-bg via-bg to-accent-soft/60 px-4 py-10">
+    <main className="flex flex-1 items-center justify-center bg-bg px-4 py-16">
       <form
         onSubmit={handleSubmit}
-        className={`flex w-full max-w-sm flex-col gap-4 rounded-xl border-t-4 bg-surface p-8 shadow-md ${meta.borderClass}`}
+        className={`flex w-full max-w-sm flex-col gap-4 rounded-sm border-t-8 bg-surface p-8 shadow-[0_12px_32px_-16px_rgba(0,0,0,0.25)] sm:p-10 ${meta.borderClass}`}
       >
-        <h1 className="text-xl font-semibold text-text">{meta.title}</h1>
+        <h1 className="text-3xl text-ink">{meta.title}</h1>
         {meta.hint && <p className="text-sm text-text-secondary">{meta.hint}</p>}
 
         {error && (
-          <p className="rounded-md bg-error px-3 py-2 text-sm text-bordeaux">
+          <p className="rounded-sm bg-error px-3 py-2 text-sm text-bordeaux">
             {error}
           </p>
         )}
@@ -86,7 +83,7 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-md border border-black/15 px-3 py-2 text-text"
+            className="rounded-sm border border-line bg-bg px-4 py-3 text-ink focus:border-ink focus:outline-none"
           />
         </label>
 
@@ -98,14 +95,14 @@ function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded-md border border-black/15 px-3 py-2 text-text"
+            className="rounded-sm border border-line bg-bg px-4 py-3 text-ink focus:border-ink focus:outline-none"
           />
         </label>
 
         <button
           type="submit"
           disabled={submitting}
-          className={`mt-2 rounded-md px-4 py-2 font-medium text-white disabled:opacity-60 ${meta.buttonClass}`}
+          className="mt-2 rounded-sm bg-ink px-4 py-3 font-semibold text-white hover:bg-ink/85 disabled:opacity-60"
         >
           {submitting ? 'Connexion...' : 'Se connecter'}
         </button>

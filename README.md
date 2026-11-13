@@ -30,7 +30,9 @@
 |---|---|
 | ![Dashboard admin](docs/captures/dashboard-admin.png) | ![Plan interactif Smart Library](docs/captures/smart-library.png) |
 
-![Catalogue](docs/captures/catalogue.png)
+| Accueil | Catalogue |
+|---|---|
+| ![Accueil](docs/captures/accueil.png) | ![Catalogue](docs/captures/catalogue.png) |
 
 ---
 
