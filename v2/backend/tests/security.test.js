@@ -37,9 +37,18 @@ describe('Sécurité HTTP', () => {
     expect(cookie).toMatch(/Path=\/api\/auth/);
   });
 
-  it('la 11e tentative de connexion en 15 minutes renvoie 429', async () => {
-    // Le test précédent a déjà fait 1 connexion : il en reste 9 autorisées.
-    for (let i = 0; i < 9; i++) {
+  it('les connexions réussies ne consomment pas la limite', async () => {
+    // Un utilisateur légitime qui se connecte souvent ne doit jamais être bloqué.
+    for (let i = 0; i < 12; i++) {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({ email: USER_EMAIL, password: DEMO_PASSWORD });
+      expect(res.status).toBe(200);
+    }
+  });
+
+  it('après 10 échecs, la 11e tentative renvoie 429', async () => {
+    for (let i = 0; i < 10; i++) {
       const res = await request(app)
         .post('/api/auth/login')
         .send({ email: USER_EMAIL, password: 'mauvais-mot-de-passe' });
@@ -50,8 +59,17 @@ describe('Sécurité HTTP', () => {
       .post('/api/auth/login')
       .send({ email: USER_EMAIL, password: DEMO_PASSWORD });
 
-    // Bloqué même avec le bon mot de passe : la limite passe avant tout.
+    // Bloqué même avec le bon mot de passe : la limite passe avant bcrypt.
     expect(blocked.status).toBe(429);
     expect(blocked.body.error).toBe('Trop de tentatives. Réessayez dans 15 minutes.');
+  });
+
+  it('le blocage vise un email précis : les autres comptes restent accessibles', async () => {
+    // Même IP, mais un autre email : compteur séparé.
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'hugo@bibliotech.demo', password: DEMO_PASSWORD });
+
+    expect(res.status).toBe(200);
   });
 });

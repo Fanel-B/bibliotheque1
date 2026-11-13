@@ -6,8 +6,15 @@ const SELECT_WITH_ROLE = `
   JOIN roles r ON r.id = u.role_id
 `;
 
+// Recherche insensible à la casse : "Claire@..." et "claire@..." désignent
+// le même compte (les claviers de téléphone mettent souvent une majuscule
+// à la première lettre). LOWER des deux côtés couvre aussi les comptes
+// créés avant que les emails soient normalisés en minuscules.
 export async function findUserByEmail(email) {
-  const result = await pool.query(`${SELECT_WITH_ROLE} WHERE u.email = $1`, [email]);
+  const result = await pool.query(
+    `${SELECT_WITH_ROLE} WHERE LOWER(u.email) = LOWER($1)`,
+    [email]
+  );
   return result.rows[0] ?? null;
 }
 

@@ -60,6 +60,9 @@ export default function RegisterPage() {
           Email
           <input
             type="email"
+            autoComplete="email"
+            autoCapitalize="none"
+            spellCheck={false}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -71,6 +74,7 @@ export default function RegisterPage() {
           Mot de passe
           <input
             type="password"
+            autoComplete="new-password"
             required
             minLength={8}
             value={password}

@@ -41,17 +41,22 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [slowServer, setSlowServer] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError(null);
     setSubmitting(true);
+    // Si la réponse tarde plus de 4 s, c'est presque toujours le réveil du serveur.
+    const slowTimer = setTimeout(() => setSlowServer(true), 4000);
     try {
       const user = await login(email, password);
       router.push(roleHomePath(user.role));
     } catch (err) {
       setError(err.message);
     } finally {
+      clearTimeout(slowTimer);
+      setSlowServer(false);
       setSubmitting(false);
     }
   }
@@ -75,6 +80,9 @@ function LoginForm() {
           Email
           <input
             type="email"
+            autoComplete="email"
+            autoCapitalize="none"
+            spellCheck={false}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -86,6 +94,7 @@ function LoginForm() {
           Mot de passe
           <input
             type="password"
+            autoComplete="current-password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -100,6 +109,14 @@ function LoginForm() {
         >
           {submitting ? 'Connexion...' : 'Se connecter'}
         </button>
+
+        {/* L'API gratuite se met en veille : on prévient au lieu de laisser
+            croire que les identifiants sont refusés. */}
+        {slowServer && (
+          <p className="text-center text-xs text-text-secondary">
+            {"Le serveur se réveille (hébergement gratuit), cela peut prendre jusqu'à une minute..."}
+          </p>
+        )}
 
         {!meta.hint && (
           <p className="text-center text-sm text-text-secondary">

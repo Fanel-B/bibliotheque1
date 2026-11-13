@@ -37,6 +37,25 @@ describe('Authentification', () => {
     expect(res.body.accessToken).toBeUndefined();
   });
 
+  it('connexion avec majuscules et espaces dans l’email : 200', async () => {
+    // Cas réel : le clavier d'un téléphone met une majuscule à la première
+    // lettre, ou l'autocomplétion ajoute un espace. Le compte doit être trouvé.
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: '  Claire@BiblioTech.Demo ', password: DEMO_PASSWORD });
+
+    expect(res.status).toBe(200);
+    expect(res.body.user.email).toBe(USER_EMAIL);
+  });
+
+  it('inscription refusée si l’email existe déjà avec une autre casse : 409', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'Doublon', email: 'CLAIRE@bibliotech.demo', password: 'motdepasse123' });
+
+    expect(res.status).toBe(409);
+  });
+
   it('route protégée sans jeton : 401', async () => {
     const res = await request(app).get('/api/auth/me');
 
